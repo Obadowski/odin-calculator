@@ -98,9 +98,9 @@ body {
 }
 
 .calc-button {
-    flex: 4 1 0%;
+    flex: 1 1 0%;
 }
 
 .zero-button {
-    flex: 11 1 0%;
+    flex: 1 1 0%;
 }

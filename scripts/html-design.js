@@ -4,7 +4,7 @@ const MAXLINES = 5;
 const LINE1ST = ["1", "2", "3", "+"];
 const LINE2ND = ["4", "5", "6", "-"];
 const LINE3RD = ["7", "8", "9", "*"];
-const LINE4TH = ["0", "=", "/"];
+const LINE4TH = ["0", ".", "=", "/"];
 
 const mainContainer = document.querySelector(".main-container");
 
