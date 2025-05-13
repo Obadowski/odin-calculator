@@ -31,6 +31,7 @@ body {
     display: flex;
     flex-direction: row;
     gap: 0.5vh 1vh;
+    justify-content: space-around;
     /* border: 2px solid grey; */
 }
 
@@ -97,9 +98,9 @@ body {
 }
 
 .calc-button {
-    flex: 3 1 0%;
+    flex: 4 1 0%;
 }
 
 .zero-button {
-    flex: 8 1 0%;
+    flex: 11 1 0%;
 }
