@@ -6,6 +6,10 @@ const LINE2ND = ["4", "5", "6", "-"];
 const LINE3RD = ["7", "8", "9", "*"];
 const LINE4TH = ["0", ".", "=", "/"];
 
+const NUMBERS = "1234567890"
+const OPERATORS = "+-*/="
+const CLEAR = "Calculator"
+
 const mainContainer = document.querySelector(".main-container");
 
 // Start by building the mainContainer (sort of main function)
@@ -25,7 +29,7 @@ function buildRow(mainContainer) {
 function buildButtons(numbersContainer, lineNumber) {
     if (lineNumber === 0) {
         appendElement(numbersContainer, "CE", "clear-button");
-        appendElement(numbersContainer, "Calculadora", "calc-screen");
+        appendElement(numbersContainer, CLEAR, "calc-screen");
     } else if (lineNumber === 1){
         buildLines(numbersContainer, LINE1ST);
     } else if (lineNumber === 2){
@@ -42,6 +46,7 @@ function buildButtons(numbersContainer, lineNumber) {
 function appendElement(container, textContext, classToAdd) {
     const element = document.createElement("div");
     element.classList.add(classToAdd);
+    element.addEventListener("click", agreggateValue);
     element.textContent = textContext;
     container.append(element);
 }
@@ -55,6 +60,52 @@ function buildLines(container, buttonTexts) {
             appendElement(container, buttonTexts[i], "calc-button");
         }
     }
+}
+
+// Event listener for buttons
+function agreggateValue(e) {
+    const value = e.target.textContent;
+    console.log(value);
+    if (value === "CE") {
+        updateCalcInfo(CLEAR);
+    } else {
+        updateCalcInfo(value);
+    }
+}
+
+function updateCalcInfo(data) {
+    const screen = document.querySelector(".calc-screen");
+    // If the key pressed is the CE (Clear)
+    if (data === CLEAR) {
+        screen.textContent = CLEAR
+        return;
+    }
+    let currentValue = screen.textContent;
+    if (currentValue === CLEAR) {
+        if (NUMBERS.includes(data)) {
+            screen.textContent = data;
+        }
+    } else {
+        // There are operators in the screen
+        if (currentValue.includes(...OPERATORS)) {
+            const operator = getOperator(currentValue)
+            operands = currentValue.split(operator);
+            // if there are two operands AND data is another operand
+            //  do operate (op1, op2, operator) -> use the result as operand 1
+            // else add the number at the end of the string
+        } else {
+
+        }
+    }
+}
+
+function getOperator(value) {
+    const operator = [...OPERATORS].find(op => value.includes(op));
+    return operator;
+}
+
+function addNumberToScreen(screen, data) {
+
 }
 
 buildRow(mainContainer);
