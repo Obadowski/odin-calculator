@@ -1,0 +1,47 @@
+* {
+    box-sizing: border-box;
+    /* Debugging purposes */
+    /* outline: 2px solid red; */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2.5vh
+}
+
+.display {
+    display: flex;
+    flex-direction: row;
+    gap: 1vh 2vh;
+    padding: 10px 20px;
+    border: 2px solid grey;
+}
+
+.display > div {
+    display: flex;
+    padding: 5px 10px;
+    border: 2px solid grey;
+}
+
+.calc-screen {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+    font-style: italic;
+    flex: 1 3 0%;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.clear-button {
+    font-weight: bold;
+}
