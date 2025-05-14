@@ -43,9 +43,9 @@ function buildButtons(numbersContainer, lineNumber) {
 }
 
 // Generic function to add a new button to the group
-function appendElement(container, textContext, classToAdd) {
+function appendElement(container, textContext, classToAdd, classToAdd2) {
     const element = document.createElement("div");
-    element.classList.add(classToAdd);
+    element.classList.add(classToAdd, classToAdd2);
     element.addEventListener("click", agreggateValue);
     element.textContent = textContext;
     container.append(element);
@@ -56,6 +56,8 @@ function buildLines(container, buttonTexts) {
     for (let i = 0; i < buttonTexts.length; i++){
         if (buttonTexts[i] === "0") {
             appendElement(container, buttonTexts[i], "zero-button")
+        } else if (buttonTexts[i] === ".") {
+            appendElement(container, buttonTexts[i], "calc-button", "dot-button");
         } else {
             appendElement(container, buttonTexts[i], "calc-button");
         }
@@ -92,26 +94,11 @@ function updateCalcInfo(data) {
         expression = getExpression(currentValue);
         screen.textContent = buildExpression(expression, data);
     }
+    toggleDotButton(screen.textContent);
 }
 
-// Split the screen expression in three operands:
-// operand1, operand2 and operator
-// function getExpression(expression) {
-//     const operator = getOperator(expression);
-//     if (!operator) {
-//         return [expression];
-//     } else {
-//         const operands = expression.split(operator);
-//         return [
-//             operands[0],
-//             operands[1],
-//             operator
-//         ]
-//     }
-// }
-
 function getExpression(expression) {
-    const trimmed = expression.trim();
+    const trimmed = String(expression).trim();
     const numberPattern = '[+-]?\\d*(?:\\.\\d*)?';  // Allows 123, -123., .45, 0.45, etc.
     const operatorPattern = '[+\\-*/]';
 
@@ -153,53 +140,51 @@ function getExpression(expression) {
     ];
 }
 
-
 function buildExpression(expression, data) {
+    let finalexpression = ""
     if  (expression.length === 1) {
         if (data === "=") {
-            return expression[0]; 
-        }
-        
-        if (NUMBERS.has(data) || (OPERATORS.has(data)) || (data === "." && !expression[0].includes("."))) {
+            finalexpression = expression[0]; 
+        } else if (NUMBERS.has(data) || (OPERATORS.has(data)) || (data === "." && !expression[0].includes("."))) {
             if (expression[1] === "."){
-                return expression[0] + expression[2] + expression[1];
+                finalexpression = expression[0] + expression[2] + expression[1];
             }
-            return expression[0] + data;
+            finalexpression = expression[0] + data;
+        } else {
+            // Default fallback
+            finalexpression = expression[0];
         }
-
-        // Default fallback
-        return expression[0];
 
     } else {
         
         if (data === "="){
-            return operate(expression[0], expression[1], expression[2]);
+            finalexpression = operate(expression[0], expression[1], expression[2]);
+        } else if (OPERATORS.has(data)){
+            finalexpression = operate(expression[0], expression[1], expression[2]) + data;
+        } else if (NUMBERS.has(data)) {
+            finalexpression = expression[0] + expression[2] + expression[1] + data;
+        } else if (data === "." && !expression[1].includes(".")) {
+            finalexpression = expression[0] + expression[2] + expression[1] + data;
+        } else {
+            // Default fallback
+            finalexpression = expression[0] + expression[2] + expression[1];
         }
 
-        if (OPERATORS.has(data)){
-            return operate(expression[0], expression[1], expression[2]) + data;
-        }
-
-        if (NUMBERS.has(data)) {
-            return expression[0] + expression[2] + expression[1] + data;
-        }
-
-        if (data === "." && !expression[1].includes(".")) {
-            return expression[0] + expression[2] + expression[1] + data;
-        }
-
-        // Default fallback
-        return expression[0] + expression[2] + expression[1];
-        
     }
+    toggleDotButton(finalexpression);
+    return finalexpression;
 }
 
-function getOperator(value) {
-    return [...OPERATORS].find(op => value.includes(op));
-}
+function toggleDotButton(finalexpression){
+    const expr = getExpression(finalexpression);
+    const currentOperand = expr[2] ? expr[1] : expr[0];
+    const dotButton = document.querySelector(".dot-button");
 
-function addNumberToScreen(screen, data) {
-
+    if (currentOperand.includes(".")){
+        dotButton.classList.add("button-disabled");
+    } else {
+        dotButton.classList.remove("button-disabled");
+    }
 }
 
 buildRow(mainContainer);
