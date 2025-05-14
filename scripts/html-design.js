@@ -1,14 +1,17 @@
 // This file will build the calculator
 
-const MAXLINES = 5;
+const MAXLINES = 6;
+const NUMBERS = new Set("1234567890");
+const OPERATORS = new Set("+-*/");
+const CLEAR = "Calculator";
+const ERASE = "Backspace";
+
 const LINE1ST = ["1", "2", "3", "+"];
 const LINE2ND = ["4", "5", "6", "-"];
 const LINE3RD = ["7", "8", "9", "*"];
 const LINE4TH = ["0", ".", "=", "/"];
+const LINE5TH = [ERASE];
 
-const NUMBERS = new Set("1234567890")
-const OPERATORS = new Set("+-*/")
-const CLEAR = "Calculator"
 
 const mainContainer = document.querySelector(".main-container");
 
@@ -38,6 +41,8 @@ function buildButtons(numbersContainer, lineNumber) {
         buildLines(numbersContainer, LINE3RD);
     } else if (lineNumber === 4){
         buildLines(numbersContainer, LINE4TH);
+    } else if (lineNumber === 5){
+        buildLines(numbersContainer, LINE5TH);
     }
 
 }
@@ -80,19 +85,21 @@ function updateCalcInfo(data) {
     // If the key pressed is the CE (Clear)
     if (data === CLEAR) {
         screen.textContent = CLEAR
-        return;
-    }
-    let currentValue = screen.textContent;
-    // Just after a reset
-    if (currentValue === CLEAR) {
-        if (NUMBERS.has(data)) {
-            screen.textContent = data;  // If the user added a number, then it replaces "calculator"
-        } else {
-            screen.textContent = "";  // Anything else, i.e. operators, the screen is cleared
-        }
+    } else if (data === ERASE) {
+        screen.textContent = screen.textContent.slice(0,-1);
     } else {
-        expression = getExpression(currentValue);
-        screen.textContent = buildExpression(expression, data);
+        let currentValue = screen.textContent;
+        // Just after a reset
+        if (currentValue === CLEAR) {
+            if (NUMBERS.has(data)) {
+                screen.textContent = data;  // If the user added a number, then it replaces "calculator"
+            } else {
+                screen.textContent = "";  // Anything else, i.e. operators, the screen is cleared
+            }
+        } else {
+            expression = getExpression(currentValue);
+            screen.textContent = buildExpression(expression, data);
+        }
     }
     toggleDotButton(screen.textContent);
 }
